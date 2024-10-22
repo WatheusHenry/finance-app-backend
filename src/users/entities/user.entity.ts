@@ -1,22 +1,23 @@
+// user/entities/user.entity.ts
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity()
+@Entity('user')
 export class User {
-  @PrimaryGeneratedColumn()
-  id: number;
+    @PrimaryGeneratedColumn()
+    id: number;
 
-  @Column({ unique: true })
-  email: string;
+    @Column({ unique: true })
+    email: string;
 
-  @Column()
-  nome: string;
+    @Column()
+    nome: string;
 
-  @Column()
-  senha: string; // Hash da senha
+    @Column()
+    senha: string;
 
-  @Column({ default: new Date() })
-  data_criacao: Date;
+    @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+    data_criacao: Date;
 
-  @Column({ default: new Date() })
-  data_atualizacao: Date;
+    @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP', onUpdate: 'CURRENT_TIMESTAMP' })
+    data_atualizacao: Date;
 }

@@ -1,27 +1,38 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, ConflictException, UnauthorizedException } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
+import * as bcrypt from 'bcrypt'; // Biblioteca para hash de senhas
+import { CreateUserDto } from '../users/dto/create-user.dto';
+import { LoginUserDto } from 'src/users/dto/login-user.dto';
+import { User } from 'src/users/entities/user.entity';
+
 
 @Injectable()
 export class AuthService {
   constructor(
     private usersService: UsersService,
     private jwtService: JwtService,
-  ) {}
 
-  async validateUser(email: string, senha: string): Promise<any> {
-    const user = await this.usersService.validateUserPassword(email, senha);
-    if (user) {
-      const { senha, ...result } = user;
-      return result;
+  ) { }
+
+
+  async register(createUserDto: CreateUserDto): Promise<any> {
+    const { email, senha, nome } = createUserDto;
+
+    const userExists = await this.usersService.findByEmail(email);
+    if (userExists) {
+      throw new ConflictException('Usuário já registrado com esse e-mail');
     }
-    return null;
-  }
 
-  async login(user: any) {
-    const payload = { email: user.email, sub: user.id };
-    return {
-      access_token: this.jwtService.sign(payload),
-    };
+    const hashedPassword = await bcrypt.hash(senha, 10);
+
+    // Cria o novo usuário
+    const newUser = await this.usersService.create({
+      email,
+      senha: hashedPassword,
+      nome,
+    });
+
+    return { message: 'Usuário registrado com sucesso', user: newUser };
   }
 }

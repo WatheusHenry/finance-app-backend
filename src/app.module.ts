@@ -7,24 +7,23 @@ import { TransactionModule } from './transaction/transaction.module';
 import { CategoriesModule } from './categories/categories.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './users/entities/user.entity';
-
-@Module({
-  imports: [],
-
-})
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
     TypeOrmModule.forRoot({
-      type: 'postgres', // ou 'mysql', 'sqlite', etc.
-      host: 'localhost', // Endereço do banco
-      port: 5432, // Porta do banco (ajuste conforme necessário)
-      username: 'user', // Usuário do banco
-      password: 'password', // Senha do banco
-      database: 'finance_db', // Nome do banco de dados
-      entities: [User], // Importar entidades
-      synchronize: true, // Sincroniza automaticamente as mudanças de entidades no banco (desabilite em produção)
+      type: 'mysql', 
+      host: '20.206.249.227', 
+      port: 3306, 
+      username: 'root', 
+      password: 'root', 
+      database: 'finance_db', 
+      entities: [User], 
+      synchronize: true, 
+      logging: true, 
+
     }),
+    ConfigModule.forRoot(),
     UsersModule, AuthModule, TransactionModule, CategoriesModule
   ], controllers: [AppController],
   providers: [AppService],

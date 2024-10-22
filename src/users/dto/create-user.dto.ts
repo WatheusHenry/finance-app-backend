@@ -4,8 +4,3 @@ export class CreateUserDto {
     senha: string;
   }
   
-  export class LoginUserDto {
-    email: string;
-    senha: string;
-  }
-  
