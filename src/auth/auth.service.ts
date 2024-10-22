@@ -15,6 +15,24 @@ export class AuthService {
 
   ) { }
 
+  async login(loginUserDto: LoginUserDto): Promise<any> {
+    const { email, senha } = loginUserDto;
+
+    const user = await this.usersService.findByEmail(email);
+    if (!user) {
+        throw new UnauthorizedException('Usuário ou senha incorretos');
+    }
+
+    const isPasswordValid = await bcrypt.compare(senha, user.senha);
+    if (!isPasswordValid) {
+        throw new UnauthorizedException('Usuário ou senha incorretos');
+    }
+
+    const payload = { email: user.email, sub: user.id };
+    const token = this.jwtService.sign(payload);
+
+    return { access_token: token };
+}
 
   async register(createUserDto: CreateUserDto): Promise<any> {
     const { email, senha, nome } = createUserDto;
