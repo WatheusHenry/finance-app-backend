@@ -1,5 +1,6 @@
 // user/entities/user.entity.ts
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Transaction } from 'src/transaction/entities/transaction.entity';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 
 @Entity('user')
 export class User {
@@ -14,6 +15,9 @@ export class User {
 
     @Column()
     senha: string;
+
+    @OneToMany(() => Transaction, (transaction) => transaction.user) 
+    transactions: Transaction[];
 
     @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
     data_criacao: Date;

@@ -1,26 +1,46 @@
+// src/transaction/transaction.service.ts
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
 import { UpdateTransactionDto } from './dto/update-transaction.dto';
+import { Transaction } from './entities/transaction.entity';
 
 @Injectable()
 export class TransactionService {
-  create(createTransactionDto: CreateTransactionDto) {
-    return 'This action adds a new transaction';
+  constructor(
+    @InjectRepository(Transaction)
+    private transactionsRepository: Repository<Transaction>,
+  ) {}
+
+  async create(createTransactionDto: CreateTransactionDto): Promise<Transaction> {
+    const transaction = this.transactionsRepository.create({
+        ...createTransactionDto,
+        user: { id: createTransactionDto.userId }, // Atribuindo o usuário corretamente
+    });
+
+    return this.transactionsRepository.save(transaction);
+}
+
+  async findAll(userId: number): Promise<Transaction[]> {
+    return this.transactionsRepository.find({
+      where: {
+        user: {
+          id: userId,
+        },
+      },
+    });
+  }
+  async findOne(id: number): Promise<Transaction> {
+    return this.transactionsRepository.findOne({ where: { id } });
   }
 
-  findAll() {
-    return `This action returns all transaction`;
+  async update(id: number, updateTransactionDto: UpdateTransactionDto): Promise<Transaction> {
+    await this.transactionsRepository.update(id, updateTransactionDto);
+    return this.findOne(id);
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} transaction`;
-  }
-
-  update(id: number, updateTransactionDto: UpdateTransactionDto) {
-    return `This action updates a #${id} transaction`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} transaction`;
+  async remove(id: number): Promise<void> {
+    await this.transactionsRepository.delete(id);
   }
 }
