@@ -9,15 +9,22 @@ export class TransactionController {
   constructor(private readonly transactionService: TransactionService) {}
 
   @Post()
-  create(@Body() createTransactionDto: CreateTransactionDto, @Request() req) {
-      createTransactionDto.userId = req.body.userId; 
-      console.log(createTransactionDto)
-      return this.transactionService.create(createTransactionDto);
+  create(@Body() createTransactionDto: CreateTransactionDto) {
+
+    if (!createTransactionDto.userId) {
+      throw new Error('userId is required');
+    }
+
+    if (!createTransactionDto.categoryId) {
+      throw new Error('categoryId is required');
+    }
+
+    return this.transactionService.create(createTransactionDto);
   }
 
   @Get()
   findAll(@Request() req) {
-    const userId = req.user.id; 
+    const userId = req.user.id;
     return this.transactionService.findAll(userId);
   }
 

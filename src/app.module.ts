@@ -9,6 +9,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './users/entities/user.entity';
 import { ConfigModule } from '@nestjs/config';
 import { Transaction } from './transaction/entities/transaction.entity';
+import { Category } from './categories/entities/category.entity';
 
 @Module({
   imports: [
@@ -19,7 +20,7 @@ import { Transaction } from './transaction/entities/transaction.entity';
       username: 'root', 
       password: 'root', 
       database: 'finance_db', 
-      entities: [User,Transaction], 
+      entities: [User,Transaction,Category], 
       synchronize: true, 
       logging: true, 
 

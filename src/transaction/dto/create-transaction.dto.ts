@@ -1,5 +1,5 @@
 // src/transaction/dto/create-transaction.dto.ts
-import { IsNumber, IsString, IsIn } from 'class-validator';
+import { IsNumber, IsString, IsIn, IsNotEmpty } from 'class-validator';
 
 export class CreateTransactionDto {
     @IsNumber()
@@ -14,4 +14,8 @@ export class CreateTransactionDto {
 
     @IsString()
     descricao?: string; // Descrição da transação
+
+    @IsNotEmpty()
+    @IsNumber()
+    categoryId: number; 
 }

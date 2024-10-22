@@ -1,5 +1,5 @@
 // src/transaction/dto/update-transaction.dto.ts
-import { IsNumber, IsOptional, IsString, IsIn } from 'class-validator';
+import { IsNumber, IsOptional, IsString, IsIn, IsNotEmpty } from 'class-validator';
 
 export class UpdateTransactionDto {
     @IsOptional()
@@ -14,4 +14,8 @@ export class UpdateTransactionDto {
     @IsOptional()
     @IsString()
     descricao?: string; // Descrição da transação
+
+    @IsNotEmpty()
+    @IsNumber()
+    categoryId: number; 
 }
