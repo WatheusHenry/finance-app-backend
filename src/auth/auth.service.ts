@@ -20,19 +20,19 @@ export class AuthService {
 
     const user = await this.usersService.findByEmail(email);
     if (!user) {
-        throw new UnauthorizedException('Usuário ou senha incorretos');
+      throw new UnauthorizedException('Usuário ou senha incorretos');
     }
 
     const isPasswordValid = await bcrypt.compare(senha, user.senha);
     if (!isPasswordValid) {
-        throw new UnauthorizedException('Usuário ou senha incorretos');
+      throw new UnauthorizedException('Usuário ou senha incorretos');
     }
 
     const payload = { email: user.email, sub: user.id };
     const token = this.jwtService.sign(payload);
 
     return { access_token: token };
-}
+  }
 
   async register(createUserDto: CreateUserDto): Promise<any> {
     const { email, senha, nome } = createUserDto;
@@ -44,13 +44,15 @@ export class AuthService {
 
     const hashedPassword = await bcrypt.hash(senha, 10);
 
-    // Cria o novo usuário
     const newUser = await this.usersService.create({
       email,
       senha: hashedPassword,
       nome,
     });
 
-    return { message: 'Usuário registrado com sucesso', user: newUser };
+    const payload = { email: newUser.email, sub: newUser.id };
+    const token = this.jwtService.sign(payload);
+
+    return { message: 'Usuário registrado com sucesso', access_token: token };
   }
 }
