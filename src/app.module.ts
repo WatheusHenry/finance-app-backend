@@ -15,9 +15,9 @@ import { Category } from './categories/entities/category.entity';
   imports: [
     TypeOrmModule.forRoot({
       type: 'mysql', 
-      host: '20.206.249.227', 
+      host: 'localhost', 
       port: 3306, 
-      username: 'root', 
+      username: 'user', 
       password: 'root', 
       database: 'finance_db', 
       entities: [User,Transaction,Category], 
